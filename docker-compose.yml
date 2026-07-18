@@ -28,8 +28,9 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-siteforge}
       PORT: 4000
       NODE_ENV: production
-      COOKIE_SECURE: "false"
-      CLIENT_ORIGIN: http://localhost:5173
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COOKIE_SAME_SITE: ${COOKIE_SAME_SITE:-lax}
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost:5173}
       JWT_SECRET: ${JWT_SECRET:-development-jwt-secret-change-before-production}
       REFRESH_SECRET: ${REFRESH_SECRET:-development-refresh-secret-change-before-production}
     ports:
@@ -43,6 +44,8 @@ services:
   client:
     build:
       context: ./client
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
     restart: unless-stopped
     depends_on:
       server:

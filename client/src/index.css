@@ -17,6 +17,24 @@ body {
   background: #f8fafc;
 }
 
+* { box-sizing: border-box; }
+
+button, select, input { font: inherit; }
+
+button, [role='button'] {
+  min-height: 44px;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+button:hover, [role='button']:hover { transform: translateY(-1px); }
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid rgb(14 165 233 / 0.45);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) { body { overflow-x: hidden; } }
+
 #root {
   min-height: 100vh;
 }

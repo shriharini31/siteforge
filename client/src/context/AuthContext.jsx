@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { setApiToken } from '../api/client.js';
+import { apiUrl, setApiToken } from '../api/client.js';
 import { AuthContext } from './authContext.js';
 
 
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const login = async (email, password) => {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(apiUrl('/api/auth/login'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, role = 'client-viewer') => {
-    const response = await fetch('/api/auth/register', {
+    const response = await fetch(apiUrl('/api/auth/register'), {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const bootstrap = async () => {
       try {
-        const response = await fetch('/api/auth/refresh', {
+        const response = await fetch(apiUrl('/api/auth/refresh'), {
           method: 'POST',
           credentials: 'include',
         });

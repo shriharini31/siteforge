@@ -26,7 +26,7 @@ const sendAuthCookie = (res, token) => {
   res.cookie('refreshToken', token, {
     httpOnly: true,
     // Use lax by default; dev proxy uses same-origin so None isn't required.
-    sameSite: 'lax',
+    sameSite: process.env.COOKIE_SAME_SITE || 'lax',
     // Local Compose uses HTTP. Set COOKIE_SECURE=true when TLS terminates in production.
     secure: process.env.COOKIE_SECURE === 'true',
     maxAge: 7 * 24 * 60 * 60 * 1000,

@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+
+export const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
 let defaultApiToken = null;
 export const setApiToken = (token) => {
@@ -8,7 +10,7 @@ export const setApiToken = (token) => {
 export const request = async (path, { method = 'GET', body, token, headers = {}, ...options } = {}) => {
   const authToken = token || defaultApiToken;
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(apiUrl(path), {
     method,
     // include credentials to support refresh cookie flow
     credentials: 'include',

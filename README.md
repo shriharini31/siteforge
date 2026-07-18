@@ -27,6 +27,12 @@ cd ../client && npm ci && npm run build
 
 Use `npm run dev` in `server` and `client` in separate terminals for hot reload. The Vite development server proxies `/api` requests to `http://localhost:4000`.
 
+## Deploying publicly
+
+Deploy the client and API behind the same HTTPS domain when possible; this keeps API requests at `/api` and the refresh cookie is same-origin. Set `CLIENT_ORIGIN` to the public frontend URL and use strong, unique `JWT_SECRET` and `REFRESH_SECRET` values.
+
+If the frontend and API use separate public domains, build the client with `VITE_API_BASE_URL=https://api.example.com`, set `CLIENT_ORIGIN=https://app.example.com`, and set `COOKIE_SECURE=true` and `COOKIE_SAME_SITE=none`.
+
 ## Verification
 
 GitHub Actions runs the server test suite and a production client build on pushes and pull requests to `main` and `master`.
