@@ -9,9 +9,10 @@ Prerequisites: Docker Desktop with Docker Compose.
 ```bash
 git clone https://github.com/shriharini31/siteforge.git
 cd siteforge
-copy .env.example .env
 docker compose up --build
 ```
+
+The Compose defaults make the command above runnable immediately. To customize local secrets or database credentials, copy `.env.example` to `.env` first (`cp .env.example .env` on macOS/Linux or `Copy-Item .env.example .env` in PowerShell).
 
 Open [http://localhost:5173](http://localhost:5173). The API is available through the frontend at `/api` and directly at [http://localhost:4000](http://localhost:4000).
 
