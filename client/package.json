@@ -4,10 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "vite preview --host 0.0.0.0",
     "dev": "vite",
     "build": "vite build",
+    "test": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=22"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

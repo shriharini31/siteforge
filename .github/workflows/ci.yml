@@ -7,8 +7,26 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test:
+  server:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: siteforge_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d siteforge_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/siteforge_test
+      JWT_SECRET: ci-jwt-secret
+      REFRESH_SECRET: ci-refresh-secret
     strategy:
       matrix:
         node-version: [20.x]
@@ -19,20 +37,40 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+        node-version: ${{ matrix.node-version }}
+        cache: npm
+        cache-dependency-path: server/package-lock.json
 
-      - name: Install and test server
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Run server tests
         working-directory: server
         run: |
-          npm ci
+          npm run migrate
           npm test
 
-      - name: Install and test client (if tests present)
+  client:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
         working-directory: client
-        run: |
-          npm ci
-          if npm test --silent; then
-            echo "Client tests ran"
-          else
-            echo "Client tests skipped or failed";
-          fi
+        run: npm ci
+
+      - name: Build client
+        working-directory: client
+        run: npm run build

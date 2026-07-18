@@ -3,9 +3,9 @@ FROM node:22-slim
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy package files and install production dependencies
+# Copy package files and install exactly the production dependency set.
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copy source
 COPY . ./
