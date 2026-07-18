@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiUrl, setApiToken } from '../api/client.js';
+import { request, setApiToken } from '../api/client.js';
 import { AuthContext } from './authContext.js';
 
 
@@ -9,15 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const login = async (email, password) => {
-    const response = await fetch(apiUrl('/api/auth/login'), {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || 'Login failed');
+    const payload = await request('/api/auth/login', { method: 'POST', body: { email, password } });
 
     setUser(payload.data.user);
     setAccessToken(payload.data.accessToken);
@@ -25,15 +17,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password, role = 'client-viewer') => {
-    const response = await fetch(apiUrl('/api/auth/register'), {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, role }),
-    });
-
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || 'Registration failed');
+    const payload = await request('/api/auth/register', { method: 'POST', body: { name, email, password, role } });
 
     setUser(payload.data.user);
     setAccessToken(payload.data.accessToken);
@@ -48,13 +32,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const bootstrap = async () => {
       try {
-        const response = await fetch(apiUrl('/api/auth/refresh'), {
-          method: 'POST',
-          credentials: 'include',
-        });
-
-        const payload = await response.json();
-        if (!response.ok || !payload.data?.accessToken) {
+        const payload = await request('/api/auth/refresh', { method: 'POST' });
+        if (!payload.data?.accessToken) {
           setUser(null);
           setAccessToken(null);
           return;

@@ -3,19 +3,21 @@ import assert from 'node:assert/strict';
 import request from 'supertest';
 import app from '../src/app.js';
 
+const testEmail = `alice-${Date.now()}-${Math.random().toString(16).slice(2)}@example.com`;
+
 test('register creates a user and returns an auth envelope', async () => {
   const res = await request(app)
     .post('/api/auth/register')
     .send({
       name: 'Alice Builder',
-      email: 'alice@example.com',
+      email: testEmail,
       password: 'SecurePass123!',
       role: 'client-viewer',
     });
 
   assert.equal(res.status, 201);
   assert.equal(res.body.error, null);
-  assert.equal(res.body.data.user.email, 'alice@example.com');
+  assert.equal(res.body.data.user.email, testEmail);
   assert.equal(res.body.data.user.role, 'client-viewer');
   assert.ok(res.headers['set-cookie'][0].includes('refreshToken='));
 });
@@ -23,7 +25,7 @@ test('register creates a user and returns an auth envelope', async () => {
 test('login issues access and refresh tokens', async () => {
   const res = await request(app)
     .post('/api/auth/login')
-    .send({ email: 'alice@example.com', password: 'SecurePass123!' });
+    .send({ email: testEmail, password: 'SecurePass123!' });
 
   assert.equal(res.status, 200);
   assert.equal(res.body.error, null);
@@ -34,7 +36,7 @@ test('login issues access and refresh tokens', async () => {
 test('refresh endpoint returns a new access token for a valid refresh cookie', async () => {
   const loginRes = await request(app)
     .post('/api/auth/login')
-    .send({ email: 'alice@example.com', password: 'SecurePass123!' });
+    .send({ email: testEmail, password: 'SecurePass123!' });
 
   const refreshCookie = loginRes.headers['set-cookie'][0].split(';')[0];
 

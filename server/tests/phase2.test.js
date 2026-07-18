@@ -4,6 +4,8 @@ import request from 'supertest';
 import app from '../src/app.js';
 import { resetStore } from '../src/data/store.js';
 
+const testId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
 test.beforeEach(() => {
   resetStore();
 });
@@ -13,7 +15,7 @@ test('budget transaction creation recalculates variance and status', async () =>
     .post('/api/auth/register')
     .send({
       name: 'Phase Two Admin',
-      email: 'phase2@example.com',
+      email: `phase2-${testId}@example.com`,
       password: 'SecurePass123!',
       role: 'admin',
     });
@@ -48,7 +50,7 @@ test('resource assignment rejects overlapping dates with a conflict payload', as
     .post('/api/auth/register')
     .send({
       name: 'Phase Two PM',
-      email: 'pm@example.com',
+      email: `pm-${testId}@example.com`,
       password: 'SecurePass123!',
       role: 'pm',
     });
@@ -93,7 +95,7 @@ test('material consumption decrements stock and records a budget transaction', a
     .post('/api/auth/register')
     .send({
       name: 'Phase Two Supervisor',
-      email: 'supervisor@example.com',
+      email: `supervisor-${testId}@example.com`,
       password: 'SecurePass123!',
       role: 'supervisor',
     });

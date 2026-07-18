@@ -23,7 +23,19 @@ export const request = async (path, { method = 'GET', body, token, headers = {},
     ...options,
   });
 
-  const payload = await response.json().catch(() => ({ data: null, error: 'Request failed', meta: { status: response.status } }));
-  if (!response.ok) throw new Error(payload.error || 'Request failed');
+  const contentType = response.headers.get('content-type') || '';
+  const payload = contentType.includes('application/json')
+    ? await response.json().catch(() => null)
+    : null;
+
+  if (!response.ok) {
+    const message = payload?.error
+      || `API request failed (${response.status}). Configure VITE_API_BASE_URL to your deployed backend URL.`;
+    throw new Error(message);
+  }
+
+  if (!payload) {
+    throw new Error('The API returned a non-JSON response. Check VITE_API_BASE_URL and backend routing.');
+  }
   return payload;
 };
