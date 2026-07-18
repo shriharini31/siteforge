@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: siteforge
+    volumes:
+      - ./server/migrations:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+
+  server:
+    build:
+      context: ./server
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/siteforge
+      PORT: 4000
+      NODE_ENV: production
+      COOKIE_SECURE: "false"
+      CLIENT_ORIGIN: http://localhost:5173
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/usr/src/app:ro
+    command: ["node", "server.js"]
+
+  client:
+    build:
+      context: ./client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "5173:80"

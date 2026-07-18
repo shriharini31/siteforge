@@ -1,0 +1,17 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+coverage/
+.vite/
+
+# Environment secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Logs and editor/OS files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

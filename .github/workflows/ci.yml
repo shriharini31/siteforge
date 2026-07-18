@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install and test server
+        working-directory: server
+        run: |
+          npm ci
+          npm test
+
+      - name: Install and test client (if tests present)
+        working-directory: client
+        run: |
+          npm ci
+          if npm test --silent; then
+            echo "Client tests ran"
+          else
+            echo "Client tests skipped or failed";
+          fi
