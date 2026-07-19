@@ -22,7 +22,39 @@ The platform provides secure authentication, project and phase management, budge
 - 📱 Responsive User Interface
 
 ## 📸 Screenshots
-1 login.png
+## 📸 Screenshots
+
+### 🔐 Login Page
+
+![Login Page](1%20login.png)
+
+### 🏠 Dashboard
+
+![Dashboard](2%20main%20page.png)
+
+### 📁 New Project
+
+![New Project](3%20new%20project.png)
+
+### 💰 Budget Management
+
+![Budget](4%20budget.png)
+
+### 👷 Resource Allocation
+
+![Resources](5%20resource.png)
+
+### 📝 Daily Site Logs
+
+![Daily Site Logs](6%20daily%20site%20logs.png)
+
+### 📊 Project Report
+
+![Project Report](7%20project%20report.png)
+
+### 🤝 Project Collaboration
+
+![Project Collaboration](8%20project%20collobration.png)
 
 ## 🛠️ Technology Stack
 
