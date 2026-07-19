@@ -2,6 +2,8 @@
 
 SiteForge is a full-stack construction project and resource management application. It provides authentication, projects, phases, budgets, resource allocation, and reporting workflows.
 
+For the full codebase, API, architecture, deployment, and interview explanation, read [Complete Project Documentation](docs/COMPLETE_PROJECT_DOCUMENTATION.md).
+
 ## Run with Docker
 
 Prerequisites: Docker Desktop with Docker Compose.

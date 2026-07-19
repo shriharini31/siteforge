@@ -24,8 +24,8 @@ router.post('/projects/:projectId/phases', protect, async (req, res, next) => {
 
     // ownership/admin check
     const isOwner = project.owner_id === req.user.sub;
-    const isAdmin = req.user.role === 'admin';
-    if (!isOwner && !isAdmin) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
+    const canManagePhases = isOwner || ['admin', 'pm'].includes(req.user.role);
+    if (!canManagePhases) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
 
     const created = await createPhase(req.params.projectId, req.body);
     res.status(201).json({ data: created, error: null, meta: { status: 201 } });
@@ -51,8 +51,8 @@ router.patch('/phases/:id', protect, async (req, res, next) => {
 
     const project = await getProjectById(phase.project_id);
     const isOwner = project && project.owner_id === req.user.sub;
-    const isAdmin = req.user.role === 'admin';
-    if (!isOwner && !isAdmin) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
+    const canManagePhases = isOwner || ['admin', 'pm'].includes(req.user.role);
+    if (!canManagePhases) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
 
     const updated = await updatePhase(req.params.id, req.body);
     res.json({ data: updated, error: null, meta: { status: 200 } });
@@ -68,8 +68,8 @@ router.delete('/phases/:id', protect, async (req, res, next) => {
 
     const project = await getProjectById(phase.project_id);
     const isOwner = project && project.owner_id === req.user.sub;
-    const isAdmin = req.user.role === 'admin';
-    if (!isOwner && !isAdmin) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
+    const canManagePhases = isOwner || ['admin', 'pm'].includes(req.user.role);
+    if (!canManagePhases) return res.status(403).json({ data: null, error: 'Forbidden', meta: { status: 403 } });
 
     await deletePhase(req.params.id);
     res.status(204).end();
